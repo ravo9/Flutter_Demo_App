@@ -30,11 +30,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   int _counter = 0;
+  final List<String> _listItems = ['Item 1', 'Item 2', 'Item 3'];
 
   void _incrementCounter() {
     setState(() {
-      _counter++;
+      _listItems.add("Item ${(_listItems.length + 1)}");
+      _counter = _listItems.length;
     });
   }
 
@@ -50,11 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'Click to add more news to the list:',
             ),
             Text(
-              '$_counter',
+              '${_listItems.length}',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _listItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(_listItems[index]),
+                  );
+                },
+              ),
             ),
           ],
         ),
