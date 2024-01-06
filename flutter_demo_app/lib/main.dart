@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models/article.dart';
 import 'services/api_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -80,6 +81,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       backgroundImage: NetworkImage(article.imageUrl),
                       backgroundColor: Colors.transparent,
                     ),
+                    onTap: () async {
+                      try {
+                        if (await canLaunch(article.url)) {
+                          await launch(article.url);
+                        } else {
+                          // This will run if the URL is invalid
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Invalid URL'),
+                          ));
+                        }
+                      } catch (e) {
+                        // This will run if there's an error in launching the URL
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Error: $e'),
+                        ));
+                      }
+                    },
                   ),
                 );
               },
