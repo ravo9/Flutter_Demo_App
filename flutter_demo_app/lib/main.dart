@@ -12,12 +12,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Reddit #wallstreetbets App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.light(
+          primary: Colors.blueGrey[50] ?? Colors.blueGrey, // Lighter shade for app bar, with fallback
+          onPrimary: Colors.black, // Black text/icon color on app bar
+        ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white, // White app bar
+          titleTextStyle: TextStyle(color: Colors.black87, fontSize: 20, fontWeight: FontWeight.bold),
+          iconTheme: IconThemeData(color: Colors.black87),
+        ),
+        cardTheme: CardTheme(
+          color: Colors.white, // White cards
+          shadowColor: Colors.grey.withOpacity(0.2), // Soft shadow
+          elevation: 2,
+        ),
+        textTheme: TextTheme(
+          titleMedium: TextStyle(color: Colors.black, fontSize: 16), // Refined typography
+        ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo App'),
+      home: const MyHomePage(title: 'Reddit #wallstreetbets App'),
     );
   }
 }
@@ -58,14 +74,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> _listItems = ['Item 1', 'Item 2', 'Item 3'];
   late Future<List<Article>> futureArticles;
-
-  void _incrementCounter() {
-    setState(() {
-      _listItems.add("Item ${(_listItems.length + 1)}");
-    });
-  }
 
   @override
   void initState() {
@@ -77,50 +86,36 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Click to add more news to the list:',
-            ),
-            Text(
-              '${_listItems.length}',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            Expanded(
-              child: FutureBuilder<List<Article>>(
-                future: futureArticles,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        Article article = snapshot.data![index];
-                        return ListTile(
-                          title: Text(article.title),
-                          leading: Image.network(article.imageUrl),
-                        );
-                      },
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return CircularProgressIndicator();
-                },
-              ),
-            ),
-          ],
-        ),
+      body: FutureBuilder<List<Article>>(
+        future: futureArticles,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                Article article = snapshot.data![index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 2,
+                  child: ListTile(
+                    title: Text(article.title, style: Theme.of(context).textTheme.titleMedium),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(article.imageUrl),
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text("${snapshot.error}"));
+          }
+          return Center(child: CircularProgressIndicator());
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
