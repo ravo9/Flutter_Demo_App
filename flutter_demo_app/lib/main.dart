@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.blueGrey[50] ?? Colors.blueGrey, // Lighter shade for app bar, with fallback
           onPrimary: Colors.black, // Black text/icon color on app bar
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white, // White app bar
           titleTextStyle: TextStyle(color: Colors.black87, fontSize: 20, fontWeight: FontWeight.bold),
           iconTheme: IconThemeData(color: Colors.black87),

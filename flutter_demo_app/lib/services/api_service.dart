@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../models/article.dart';
 
 Future<List<Article>> fetchArticles() async {
-  final endpoint = 'https://www.reddit.com/r/Wallstreetbets/top.json?limit=10&t=year';
+  final endpoint = 'https://www.reddit.com/r/Wallstreetbets/top.json?limit=10&t=day';
   final response = await http.get(Uri.parse(endpoint));
 
   if (response.statusCode == 200) {
