@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'models/article.dart';
+import 'services/api_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,32 +35,6 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Reddit #wallstreetbets App'),
     );
-  }
-}
-
-class Article {
-  final String title;
-  final String imageUrl;
-
-  Article({required this.title, required this.imageUrl});
-
-  factory Article.fromJson(Map<String, dynamic> json) {
-    return Article(
-      title: json['data']['title'] as String,
-      imageUrl: json['data']['thumbnail'] as String,
-    );
-  }
-}
-
-Future<List<Article>> fetchArticles() async {
-  final endpoint = 'https://www.reddit.com/r/Wallstreetbets/top.json?limit=10&t=year';
-  final response = await http.get(Uri.parse(endpoint));
-
-  if (response.statusCode == 200) {
-    List<dynamic> children = json.decode(response.body)['data']['children'];
-    return children.map((data) => Article.fromJson(data)).toList();
-  } else {
-    throw Exception('Failed to load articles');
   }
 }
 
